@@ -148,7 +148,47 @@ char findIntersection(vector<char> rucksack)
   return result;
 }
 
+char findBadge(vector<char> elf1, vector<char> elf2, vector<char> elf3)
+{
+  sort(elf1.begin(), elf1.end());
+  sort(elf2.begin(), elf2.end());
+  sort(elf3.begin(), elf3.end());
+  vector<char> candidate1;
+  vector<char> candidate2;
+  vector<char> candidate3;
+  vector<char> inters12;
+  vector<char> inters23;
+  vector<char> inters13;
+  set_intersection(elf1.begin(), elf1.end(),
+                   elf2.begin(), elf2.end(),
+                   back_inserter(inters12));
+  set_intersection(elf2.begin(), elf2.end(),
+                   elf3.begin(), elf3.end(),
+                   back_inserter(inters23));
+  set_intersection(elf1.begin(), elf1.end(),
+                   elf3.begin(), elf3.end(),
+                   back_inserter(inters13));
+  sort(inters12.begin(), inters12.end());
+  sort(inters23.begin(), inters23.end());
+  sort(inters13.begin(), inters13.end());
 
+  set_intersection(inters12.begin(), inters12.end(),
+                   inters23.begin(), inters23.end(),
+                   back_inserter(candidate1));
+
+  set_intersection(inters23.begin(), inters23.end(),
+                   inters13.begin(), inters13.end(),
+                   back_inserter(candidate2));
+
+  sort(candidate1.begin(), candidate1.end());
+  sort(candidate2.begin(), candidate2.end());
+
+  set_intersection(candidate1.begin(), candidate1.end(),
+                   candidate2.begin(), candidate2.end(),
+                   back_inserter(candidate3));
+  char badge = candidate3[0];
+  return badge;
+}
 
 int main()
 {
@@ -157,15 +197,21 @@ int main()
   rucksacks = readData(filepath); 
   int num_rucksacks = countRucksacks(filepath);
   
+//  int sum = 0;
+//  int temp;
+//  for (int i = 0; i < num_rucksacks; i++)
+//  {
+//   temp = priority(findIntersection(rucksacks[i]));
+//   sum += temp; 
+//   cout << "Rucksack " << i << " contributes: " << temp  << endl;
+//  }
+//  cout << endl;
+//  cout << "The final sum of " << num_rucksacks << " rucksacks is: " << sum << endl;
   int sum = 0;
-  int temp;
-  for (int i = 0; i < num_rucksacks; i++)
+  for (int i = 0; i<num_rucksacks-2; i+=3)
   {
-   temp = priority(findIntersection(rucksacks[i]));
-   sum += temp; 
-   cout << "Rucksack " << i << " contributes: " << temp  << endl;
+   sum += priority(findBadge(rucksacks[i], rucksacks[i+1], rucksacks[i+2])); 
   }
-  cout << endl;
-  cout << "The final sum of " << num_rucksacks << " rucksacks is: " << sum << endl;
+  cout << "Sum of all badges iss: " << sum;
 }
 
