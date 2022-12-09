@@ -78,19 +78,6 @@ public:
   }
 };
 
-int vecMin(vector<int> vec)
-{
-  int size = vec.size();
-  long min = 999999999999999999;
-  for (int i = 0; i < size; i++)
-  {
-   if(min > vec[i])
-   {
-    min = vec[i];
-   }
-  }
-  return min;
-}
 
 Result find3Max(map<int, int> mp)
 {
