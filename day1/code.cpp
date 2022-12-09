@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 #include <numeric>
+#include <queue>
+#include <cassert>
 
 using namespace std;
 
@@ -64,16 +66,118 @@ vector<int> findMax(map<int, int> mp){
   result.push_back(max);
   return result;
 }
+class Result
+{
+public:
+  vector<int> indices;
+  vector<int> maxima;
+  Result()
+  {
+    indices = {0, 0, 0};
+    maxima = {0, 0, 0};
+  }
+};
+
+int vecMin(vector<int> vec)
+{
+  int size = vec.size();
+  long min = 999999999999999999;
+  for (int i = 0; i < size; i++)
+  {
+   if(min > vec[i])
+   {
+    min = vec[i];
+   }
+  }
+  return min;
+}
+
+Result find3Max(map<int, int> mp)
+{
+  int x = 0;
+  int first = 0;
+  int first_idx = 0;
+  int second = 0;
+  int second_idx = 0;
+  int third = 0;
+  int third_idx = 0;
+  Result result;
+  for(int i = 0; i < mp.size(); i++)
+  {
+    x = mp[i];
+    if(x > third and x < second and x < first)
+    {
+      third = x;
+      third_idx = i; 
+    }
+    else if(x > third and x > second and x < first)
+    {
+      third = second;
+      third_idx = second_idx;
+      second = x;
+      second_idx = i;
+    }
+    else if(x > third and x > second and x > first)
+    {
+      third = second;
+      third_idx = second_idx;
+      second = first;
+      second_idx = first_idx;
+      first = x;
+      first_idx = i;
+    }
+    else if(x == second)
+    {
+     third = x;
+     third_idx = i;
+    }
+    else if(x == first)
+    {
+      third = second;
+      third_idx = second_idx;
+      second = x;
+      second_idx = i;
+    }
+  }
+  result.indices[0] = first_idx;
+  result.maxima[0] = first;
+  result.indices[1] = second_idx;
+  result.maxima[1] = second;
+  result.indices[2] = third_idx;
+  result.maxima[2] = third;
+  return result;
+}
+
+int sum3elves(Result result)
+{
+  int sum = 0;
+  for(int i = 0; i < 3; i++)
+  {
+    sum += result.maxima[i];
+  }
+  return sum;
+}
 
 int main(){
   Expedition expedition;
   expedition.readData("data.txt");
 
-  int elfChad;
   map<int, int> summed_list;
   summed_list = expedition.sumInventories();
   vector<int> maxima;
   maxima = findMax(summed_list);
-  cout << "The elf Chad is : "<< maxima.front()  << endl;
-  cout << "With total calories value: " << maxima.back() <<endl;
+
+  Result result;
+  result = find3Max(summed_list);
+
+  cout << "The first elf is : " << result.indices[0] << endl;
+  cout << "With total calories value: " << result.maxima[0] << endl;
+  
+  cout << "The second elf is : " << result.indices[1] << endl;
+  cout << "With total calories value: " << result.maxima[1] << endl;
+
+  cout << "The third elf is : " << result.indices[2] << endl;
+  cout << "With total calories value: " << result.maxima[2] << endl;  int sum3 = sum3elves(result);
+
+  cout << "Sum of 3 biggest food inventories is: " << sum3 << endl;
 }
