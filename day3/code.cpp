@@ -37,7 +37,7 @@ vector<vector<char>> readData(string const& filename)
    
   if (input.is_open())
   {
-//    while(not input.eof())                    // read line by line
+//    while(not input.eof())                   // read line by line
     for( int i = 0;not input.eof(); i++)
     {
       getline(input, line);
@@ -48,7 +48,7 @@ vector<vector<char>> readData(string const& filename)
         while (iss.good())                    // read word by word
         {
           iss >> word;
-          for (char c : word)
+          for (char c : word)                // read character by character
           {
             rucksacks[i].push_back(c);
             // cout << c << endl;
@@ -64,7 +64,7 @@ vector<vector<char>> readData(string const& filename)
   return rucksacks;
 }
 
-int priority(char ch)                               // Returns priority of a given letter
+int priority(char ch)                        // Returns priority of a given letter
 {
   int value;
   map<char, int> priority_map;
@@ -132,18 +132,18 @@ char findIntersection(vector<char> rucksack)
   vector<char> compartment2;
   vector<char> intersection;
 
-  for(int i = 0; i < rucksack.size()/2; i++)
+  for(int i = 0; i < rucksack.size()/2; i++)    // Put half of items into each compartment
   {
     compartment1.push_back(rucksack[i]);
     compartment2.push_back(rucksack[rucksack.size()/2 + i]);
   }
 
-  sort(compartment1.begin(), compartment1.end());
+  sort(compartment1.begin(), compartment1.end()); // Sorting vectors helps finding intersection
   sort(compartment2.begin(), compartment2.end());
 
-  set_intersection(compartment1.begin(), compartment1.end(),
+  set_intersection(compartment1.begin(), compartment1.end(), // Finds intersection of compartments
                    compartment2.begin(), compartment2.end(),
-                   back_inserter(intersection));
+                   back_inserter(intersection));            // Stores result in intersection vectors
   char result = intersection[0];
   return result;
 }
